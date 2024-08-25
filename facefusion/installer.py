@@ -57,7 +57,7 @@ def run(program : ArgumentParser) -> None:
 		onnxruntime = answers['onnxruntime']
 		onnxruntime_name, onnxruntime_version = ONNXRUNTIMES[onnxruntime]
 
-		subprocess.call([ 'pip', 'install', '-r', 'requirements.txt', '--force-reinstall' ])
+		subprocess.call([ 'uv', 'pip', 'install', '-r', 'requirements.txt', '--force-reinstall' ])
 		if onnxruntime == 'rocm-5.4.2' or onnxruntime == 'rocm-5.6':
 			if python_id in [ 'cp39', 'cp310', 'cp311' ]:
 				rocm_version = onnxruntime.replace('-', '')
@@ -66,13 +66,13 @@ def run(program : ArgumentParser) -> None:
 				wheel_path = os.path.join(tempfile.gettempdir(), wheel_name)
 				wheel_url = 'https://download.onnxruntime.ai/' + wheel_name
 				subprocess.call([ 'curl', '--silent', '--location', '--continue-at', '-', '--output', wheel_path, wheel_url ])
-				subprocess.call([ 'pip', 'uninstall', wheel_path, '-y', '-q' ])
-				subprocess.call([ 'pip', 'install', wheel_path, '--force-reinstall' ])
+				subprocess.call([ 'uv', 'pip', 'uninstall', wheel_path, '-y', '-q' ])
+				subprocess.call([ 'uv', 'pip', 'install', wheel_path, '--force-reinstall' ])
 				os.remove(wheel_path)
 		else:
-			subprocess.call([ 'pip', 'uninstall', 'onnxruntime', onnxruntime_name, '-y', '-q' ])
+			subprocess.call([ 'uv', 'pip', 'uninstall', 'onnxruntime', onnxruntime_name, '-y', '-q' ])
 			if onnxruntime == 'cuda-12.2':
-				subprocess.call([ 'pip', 'install', onnxruntime_name + '==' + onnxruntime_version, '--extra-index-url', 'https://aiinfra.pkgs.visualstudio.com/PublicPackages/_packaging/onnxruntime-cuda-12/pypi/simple', '--force-reinstall' ])
+				subprocess.call([ 'uv', 'pip', 'install', onnxruntime_name + '==' + onnxruntime_version, '--extra-index-url', 'https://aiinfra.pkgs.visualstudio.com/PublicPackages/_packaging/onnxruntime-cuda-12/pypi/simple', '--force-reinstall' ])
 			else:
-				subprocess.call([ 'pip', 'install', onnxruntime_name + '==' + onnxruntime_version, '--force-reinstall' ])
-		subprocess.call([ 'pip', 'install', 'numpy==1.26.4', '--force-reinstall' ])
+				subprocess.call([ 'uv', 'pip', 'install', onnxruntime_name + '==' + onnxruntime_version, '--force-reinstall' ])
+		subprocess.call([ 'uv', 'pip', 'install', 'numpy==1.26.4', '--force-reinstall' ])
